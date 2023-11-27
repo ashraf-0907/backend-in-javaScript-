@@ -1,0 +1,5 @@
+This is the Mern stack project majorly designed to learn the concept of backend 
+
+Model links :- https://app.eraser.io/workspace/YtPqZ1VogxGy1jzIDkzj
+
+The whole and sole purpose is to learn the backend 
