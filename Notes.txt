@@ -47,3 +47,13 @@ app.post("route",(req,res)=>{
         .
         .
 })
+
+For the post request we have to parse the body of the client requestiong. For this we have to use a middleware that is body-parser.
+for this we just need to do 
+import bodyParser from "body-parser";
+app.use(bodyParser.json()); // for json format
+
+The above method is outdated now. Express itself provide this.
+just have to write 
+
+app.use(express.json()); // this statement is enough for doing the same thing.

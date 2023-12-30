@@ -10,7 +10,8 @@
 
 export {asyncHandler};
 
-// Try catch way
+// Try catch way with higher order function
+// its just a wrapper function to call our asyncronosly function
 const asyncHandler = (func) => async (req,res,next) =>{
 
     try {
@@ -18,7 +19,7 @@ const asyncHandler = (func) => async (req,res,next) =>{
     } catch (error) {
         res.status(err.code || 500).json({
             success: false,
-            message: err.message
+            message: err.message,
         })
     }
 }
