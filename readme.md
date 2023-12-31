@@ -165,7 +165,77 @@ propname:{
    required:[true,"Default Error message"]
 }
 ```
-- model_name will be saved in DB as model_names this is predef in mongoDB.  
+- model_name will be saved in DB as model_names this is predef in mongoDB.
+
+
+## packages for plugins and models act as middleware
+
+1) mongoose-aggregate-paginate-v2:- A cursor based custom aggregate pagination library for Mongoose with customizable labels.  
+- Pagination :- Pagination breaks large sets of content into smaller, manageable pages for users. It's vital for navigating extensive data like product lists or movies. In SQL, LIMIT and OFFSET control the number of records shown per page and where to start. In NoSQL, methods like limit() and skip() manage the data displayed. However, large offsets can impact performance, so optimizing pagination methods is crucial for smoother browsing.
+
+## Saving password in DB
+
+**ALL THE MODIFICATION ARE MADE IN user.model.js**
+### Study of bcrypt library
+1) Password are not saved directly in the db. Whenever there is a leakage in the DB password should be protected.
+
+2) For doing this we have a third party hash function bcrypt and bcrypt.js both do the same thing the main difference is bcrypt is based on nodejs and .js dosnt envolve any other libray. the function of both is to hash the password.
+
+3) The hashing of password will be done jsut before saving the new user to the DB, so we have to use a middleware **Pre** to do it.
+
+```javascript
+schemaName.pre('save', function(next) {
+  // do stuff
+  next();
+});
+```
+here save is the event that is going to have just after the function execution.
+here function(next) is an higher order fucntion which has parameter next a function.
+
+4) How to hash password 
+- To do so follow the code snippet:-
+```javascript
+userSchema.pre('save',async function(next){
+   if(!this.isModified("password")) return next();
+
+    this.password = bcrypt.hash(this.password,10);
+    next();
+});
+```
+
+5) bcrypt.hash(var_to_be_hashed, no of rounds/salt) this perticular method will hashed the password. this func will be executed everytime even if any this modified so to overcome to this we use this.isModified("sting_var") return true if modified 
+
+6) We have to check also if the password is correct or not. Mongoose provides us to create our own custom functions/methods by using the syntax  
+```javascript
+- schemaName.methods.methodNamae = async function(password){
+   // do what you want.
+   return await bcrypt.compare(password,this.password);  
+}
+```
+
+### Study of JWT 
+
+1) JWT stands for json web tokens. It is a bearer token. It is just like a key if some person has that key we will going to send the data to him/her.
+
+**JWTs can be signed using a secret (with the HMAC algorithm) or a public/private key pair using RSA or ECDSA**
+
+2) Authorization: This is the most common scenario for using JWT. Once the user is logged in, each subsequent request will include the JWT, allowing the user to access routes, services, and resources that are permitted with that token. Single Sign On is a feature that widely uses JWT nowadays, because of its small overhead and its ability to be easily used across different domains.
+
+3) We are using 2 Token i.e
+- AccessToken (expiry is 1d)
+- RefereshToken (expiry is 10d) d:- days  
+both are same i.e jwt (value is not same)
+
+4) modify the .env file with  
+ACCESS_TOKEN_SECRET = your secret key  
+ACCESS_TOKEN_EXPIRY = 1d  
+REFERENCE_TOKEN_SECRET = new secret   
+REFERENCE_TOKEN_EXPIRY = 10d  
+
+5) jwt has method **sign** we are going to use it to generate the token. 
+
+- **jwt.sign({payload},access_token_secret,{expiresIn: access_token_expiry})** return this 
+
 
 ## Special Notes:- 
 1) async code always return a promise so when we call any async function we should use this structure of code --
