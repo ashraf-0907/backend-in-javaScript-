@@ -237,6 +237,80 @@ REFERENCE_TOKEN_EXPIRY = 10d
 - **jwt.sign({payload},access_token_secret,{expiresIn: access_token_expiry})** return this 
 
 
+## Uploading file on clouds
+1) There are two methods to do that
+- Saving the file directly to the third party cloud.
+- Saving the file first to the server and then to the third party cloud.
+
+2) We need two things here as middleware 
+- Multer.
+- Third party cloud such as AWS, Cloudinary etc...
+
+**Here We are going to explain and use cloudinary**
+
+### Study of multer
+1) Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files
+
+2) Integration with express
+```javascript
+ const multer = require('multer');
+const express = require('express');
+const app = express();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/') // Set the destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Rename the file if needed
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  // Access the uploaded file details using req.file
+  res.send('File uploaded successfully');
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+```
+
+
+### Study of Cloudinary
+1) Create account on cloudinary.
+2) Here you get an cloud_name, api_key, api_secret .
+3) Go to the .env file and create the three var and paste there value .
+4) In utils create a file cloudinary.js where you write the code snippet:-
+
+```javascript
+import {v2 as cloudinary} from "cloudinary";
+import fs from "fs"
+
+cloudinary.config({
+   cloud_name: process.env.cloud_name,
+   ...
+   ...
+});
+
+const uploadCloudinary = async (localFilePath)=>{
+   try{
+      if(!localFilePath) return null;
+      // Upload the file
+      const response = cloudinary.uploader.upload(localFilePath,{
+         resource_type:"auto",
+      })
+   }catch(error){
+      fs.unlinkSync(localFilePath)
+      return null;
+   }
+}
+```
+
+
 ## Special Notes:- 
 1) async code always return a promise so when we call any async function we should use this structure of code --
 ```javascript
