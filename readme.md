@@ -311,6 +311,33 @@ const uploadCloudinary = async (localFilePath)=>{
 ```
 
 
+## User Controller and Routes
+
+1) make two files
+- First in controllers folder with name user.controller.js
+- Second in routes as user.route.js
+
+2) In user.route.js we have to import a router and make a router there. Below is the code snippet which is used on regular basis
+```javascript
+import Router from "express"
+
+const router = Router(); // refernce same as app is refernce to express()
+
+export default router;
+```
+3) Now in app we have to import the router so its basic thing.
+```javascript
+import userRouter from "./router/user.router.js"
+```
+4) We cannot use direct as we have done earlier as we have move our router to some other place its not written in app.js 
+5) we have to use a middleware for the router and that is app.use("/users",userRouter);
+6) This will pass the contorl to the user.router.js whenever we write users as the api.
+7) In user.router.js 
+```javascript
+router.route("/register").post(name_of_the_regiserFunction) 
+```
+
+
 ## Special Notes:- 
 1) async code always return a promise so when we call any async function we should use this structure of code --
 ```javascript

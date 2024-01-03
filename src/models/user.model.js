@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         lowercase:true,
         trim:true,
     },
-    fullname:{
+    fullName:{
         type:String,
         required:true,
         trim:true,
@@ -27,9 +27,9 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type:String ,// aws url
-        required:true, 
+        required:true,
     },
-    coverimage:{
+    coverImage:{
         type:String,
     },
     watchHistory:{
@@ -55,7 +55,7 @@ userSchema.pre("save",async function(next){
 
     // other wise we have to execute the below line
 
-    this.password = bcrypt.hash(this.password,16);
+    this.password = await bcrypt.hash(this.password,16);
     next();
 })
 

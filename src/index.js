@@ -1,6 +1,6 @@
 // import dotenv from "dotenv";
 // dotenv.config({
-//     path: './env'
+//     path: './.env'
 // })
 
 import * as dotenv from 'dotenv'
@@ -38,9 +38,10 @@ dotenv.config()
 import connectDB from "../src/db/index.js";
 import app from './app.js';
 
+var port = process.env.PORT || 5000;
 connectDB().then(()=>{
-    app.listen(process.env.PORT || 5000,()=>{
-        console.log("Application is workig");
+    app.listen(port,()=>{
+        console.log(`Application is workig on port ${port}`);
     })
 })
 .catch((error)=>{
