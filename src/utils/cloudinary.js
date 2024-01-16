@@ -3,22 +3,14 @@ import fs from "fs"
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-
-const cloudname = process.env.CLOUDINARY_CLOUD_NAME
-const apikey= process.env.CLOUDINARY_API_KEY
-const apisecret = process.env.CLOUDINARY_API_SECRET
-
- console.log(cloudname.length);
-          
 cloudinary.config({ 
-  cloud_name: cloudname, 
-  api_key: apikey,
-  api_secret: apisecret
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
-        console.log(CLOUDINARY_CLOUD_NAME);
         if (!localFilePath) return null
         //upload the file on cloudinary
         const response = await cloudinary.uploader.upload(localFilePath, {

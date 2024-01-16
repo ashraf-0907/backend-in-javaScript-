@@ -337,6 +337,42 @@ import userRouter from "./router/user.router.js"
 router.route("/register").post(name_of_the_regiserFunction) 
 ```
 
+## How to use Postman
+1) Create a new collection with the desired name.
+2) Create a folder name users and inside this create a new request and do the necessary config.
+3) save the changes.
+4) Click on the environment to setup the new environment variable.
+- for example we need to write "http//localhost:xyza/something/some.." this should be save as new env varible to be use with the postman. 
+- sync the varibale with the collection option availabe on the right upper side of the postman app.
+
+
+## Login Design 
+
+### Algorithm 
+1) get the credentials form the req.body
+2) check if the necessary field are awailable 
+3) find the user with the specified field 
+-- there are operators in mongoDB like **$or=[]** in this array you can give field name to find the user
+4) If user if found generate accessToken and refershToken from the function made in user.model.js
+5) Save the refersh token to the DB using the query
+```javascript
+user.refershToken = refreshToken;
+user.save({validateBeforeSave: false});
+```
+### Passing access token to secure cookies
+1) Now our cookieParser will come into the role . we can use **.cookie(String,variableName_to_send,options)** with res.
+2) options in itself is an object which contain to field 
+- httpOnly: true and 
+- secure:true, 
+these two field will help in blocking user to modify the tokens from the frontend .
+
+## Logout functonality design
+
+### designing our first middleware 
+1) make a file auth.middleware.js in middleware folder
+
+
+
 
 ## Special Notes:- 
 1) async code always return a promise so when we call any async function we should use this structure of code --

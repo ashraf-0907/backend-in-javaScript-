@@ -10,9 +10,9 @@ app.use(cors({
 }));
 
 app.use(express.json({
-    limit: "1000kb"
+    limit: "1000000000kb"
 }))
-app.use(express.urlencoded({extended: true,limit: "1000kb" })); // parse the body.req for the data within specififed limit 
+app.use(express.urlencoded({extended: true,limit: "1000000000kb" })); // parse the body.req for the data within specififed limit 
 app.use(express.static("public")) // Serves static files in the public directory
 app.use(cookieParser());
 
